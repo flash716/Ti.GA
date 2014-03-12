@@ -10,7 +10,7 @@
 
 @implementation TiGoogleanalyticsFields
 
-+(NSDictionary *)fields
++ (NSDictionary *)fields
 {
     return [NSDictionary dictionaryWithObjectsAndKeys:
             kGAIUseSecure, @"USE_SECURE",

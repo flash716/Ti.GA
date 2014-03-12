@@ -1,139 +1,167 @@
-/**
- * Your Copyright Here
- *
- * Appcelerator Titanium is Copyright (c) 2009-2010 by Appcelerator, Inc.
- * and licensed under the Apache Public License (version 2)
- */
+//
+//  TiGoogleanalyticsTracker.h
+//  googleanalytics
+//
+//  Created by Dawson Toth on 8/19/13.
+//
+//
+
 #import "TiGoogleanalyticsModule.h"
-#import "TiBase.h"
-#import "TiHost.h"
-#import "TiUtils.h"
 
 @implementation TiGoogleanalyticsModule
 
+MAKE_SYSTEM_PROP(LOG_NONE, 0);    //kGAILogLevelNone
+MAKE_SYSTEM_PROP(LOG_ERROR, 1);   //kGAILogLevelError
+MAKE_SYSTEM_PROP(LOG_WARNING, 2); //kGAILogLevelWarning
+MAKE_SYSTEM_PROP(LOG_INFO, 3);    //kGAILogLevelInfo
+MAKE_SYSTEM_PROP(LOG_VERBOSE, 4); //kGAILogLevelVerbose
+
 #pragma mark Internal
 
-// this is generated for your module, please do not change it
--(id)moduleGUID
+- (id)moduleGUID
 {
 	return @"d8446e59-4726-44a6-b1e9-a33d5cb4742f";
 }
 
-// this is generated for your module, please do not change it
--(NSString*)moduleId
+- (NSString*)moduleId
 {
 	return @"ti.googleanalytics";
 }
 
 #pragma mark Lifecycle
 
--(void)startup
+- (void)startup
 {
 	[super startup];
     
-    // Optional: automatically send uncaught exceptions to Google Analytics.
-    [GAI sharedInstance].trackUncaughtExceptions = YES;
-    
-    // Optional: set Logger to VERBOSE for debug information.
-    [[[GAI sharedInstance] logger] setLogLevel:kGAILogLevelVerbose];
+    [self setTrackUncaughtExceptions:NUMBOOL(YES)];
+    [self setLogLevel:kGAILogLevelNone];
 }
 
--(void)shutdown:(id)sender
+- (void)shutdown:(id)sender
 {
 	[[GAI sharedInstance] dispatch];
-	
-	// you *must* call the superclass
+    
 	[super shutdown:sender];
 }
 
 #pragma mark Utility
 
--(id)proxify:(id<GAITracker>)tracker
+- (id)proxify:(id<GAITracker>)tracker
 {
-    return [[TiGoogleanalyticsTracker alloc] initWithTracker:tracker];
+    return [[[TiGoogleanalyticsTracker alloc] initWithTracker:tracker] autorelease];
 }
 
 #pragma mark Public APIs
 
--(void)closeTracker:(id)trackingId
+- (void)closeTracker:(id)trackingId
 {
     ENSURE_SINGLE_ARG(trackingId, NSString);
+    
     [[GAI sharedInstance] removeTrackerByName:trackingId];
 }
--(id)defaultTracker
+
+- (id)defaultTracker
 {
     return [self proxify:[GAI sharedInstance].defaultTracker];
 }
--(id)getTracker:(id)args
+
+- (id)getTracker:(id)args
 {
-    NSString *trackingId;
-    NSString *trackingName;
     id<GAITracker> retVal;
+    NSString *trackingId = nil;
+    NSString *trackingName = nil;
+    
     ENSURE_ARG_OR_NIL_AT_INDEX(trackingId, args, 1, NSString);
-    if (trackingId != nil) {
+    
+    if (trackingId != nil)
+    {
         ENSURE_ARG_AT_INDEX(trackingName, args, 0, NSString);
+        
         retVal = [[GAI sharedInstance] trackerWithName:trackingName trackingId:trackingId];
-    } else {
+    }
+    else
+    {
         ENSURE_ARG_AT_INDEX(trackingId, args, 0, NSString);
+        
         retVal = [[GAI sharedInstance] trackerWithTrackingId:trackingId];
     }
+    
     return [self proxify:retVal];
 }
 
--(id)optOut
+- (void)dispatch:(id)unused
 {
-    return NUMBOOL([GAI sharedInstance].optOut);
-}
--(void)setOptOut:(id)value
-{
-    ENSURE_SINGLE_ARG(value, NSObject);
-    [GAI sharedInstance].optOut = [TiUtils boolValue:value];
-}
-
--(id)dryRun
-{
-    return NUMBOOL([GAI sharedInstance].dryRun);
-}
--(void)setDryRun:(id)value
-{
-    ENSURE_SINGLE_ARG(value, NSObject);
-    [GAI sharedInstance].dryRun = [TiUtils boolValue:value];
-}
-
--(void)dispatch:(id)unused
-{    
     [[GAI sharedInstance] dispatch];
 }
 
--(id)MapBuilder
+#pragma mark Custom Accessors
+
+- (id)optOut
 {
-    return [[TiGoogleanalyticsMapBuilder alloc] init];
-}
--(id)getMapBuilder:(id)args
-{
-    return [self MapBuilder];
+    return NUMBOOL([[GAI sharedInstance] optOut]);
 }
 
--(id)Fields
+- (void)setOptOut:(id)value
+{
+    ENSURE_SINGLE_ARG(value, NSObject);
+    
+    [[GAI sharedInstance] setOptOut:[TiUtils boolValue:value]];
+}
+
+- (id)dryRun
+{
+    return NUMBOOL([[GAI sharedInstance] dryRun]);
+}
+
+- (void)setDryRun:(id)dryRun
+{
+    ENSURE_SINGLE_ARG(dryRun, NSObject);
+    
+    [[GAI sharedInstance] setDryRun:[TiUtils boolValue:dryRun]];
+}
+
+- (id)mapBuilder
+{
+    return [[[TiGoogleanalyticsMapBuilder alloc] init] autorelease];
+}
+
+- (id)getMapBuilder:(id)args
+{
+    return [self mapBuilder];
+}
+
+- (id)fields
 {
     return [TiGoogleanalyticsFields fields];
 }
 
--(id)getFields:(id)args
+- (id)getFields:(id)unused
 {
-    return [self Fields];
+    return [self fields];
 }
 
--(void)setLogLevel:(id)value
+#pragma mark Setter Overrides
+
+- (void)setLogLevel:(NSNumber *)logLevel
 {
-     ENSURE_SINGLE_ARG(value, NSObject);
-    [[GAI sharedInstance].logger setLogLevel:[TiUtils intValue:value]];
+    _logLevel = logLevel;
+    
+    [[[GAI sharedInstance] logger] setLogLevel:[logLevel integerValue]];
 }
 
-MAKE_SYSTEM_PROP(LOG_NONE, 0); //Unknown kGAILogLevelNone
-MAKE_SYSTEM_PROP(LOG_ERROR, 1); //kGAILogLevelError
-MAKE_SYSTEM_PROP(LOG_WARNING, 2); //kGAILogLevelWarning
-MAKE_SYSTEM_PROP(LOG_INFO, 3); //kGAILogLevelInfo
-MAKE_SYSTEM_PROP(LOG_VERBOSE, 4); //kGAILogLevelVerbose
+- (void)setDispatchInterval:(NSNumber *)dispatchInterval
+{
+    _dispatchInterval = dispatchInterval;
+    
+    [[GAI sharedInstance] setDispatchInterval:[dispatchInterval integerValue]];
+}
+
+- (void)setTrackUncaughtExceptions:(NSNumber *)trackUncaughtExceptions
+{
+    _trackUncaughtExceptions = trackUncaughtExceptions;
+    
+    [[GAI sharedInstance] setTrackUncaughtExceptions:[trackUncaughtExceptions boolValue]];
+}
 
 @end

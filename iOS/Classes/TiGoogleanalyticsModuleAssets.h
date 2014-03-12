@@ -1,10 +1,13 @@
-/**
- * This is a generated file. Do not edit or your changes will be lost
- */
+//
+//  TiGoogleanalyticsTracker.h
+//  googleanalytics
+//
+//  Created by Dawson Toth on 8/19/13.
+//
+//
 
 @interface TiGoogleanalyticsModuleAssets : NSObject
-{
-}
+
 - (NSData*) moduleAsset;
 - (NSData*) resolveModuleAsset:(NSString*)path;
 

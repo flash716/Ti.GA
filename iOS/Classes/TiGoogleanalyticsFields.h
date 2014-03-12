@@ -10,6 +10,6 @@
 
 @interface TiGoogleanalyticsFields : NSObject
 
-+(NSDictionary *)fields;
++ (NSDictionary *)fields;
 
 @end

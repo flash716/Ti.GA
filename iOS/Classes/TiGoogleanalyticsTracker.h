@@ -6,13 +6,17 @@
 //
 //
 
-#import "TiProxy.h"
 #import "GAITracker.h"
+#import "TiProxy.h"
 
-@interface TiGoogleanalyticsTracker : TiProxy {
-        id<GAITracker> tracker;
-}
+@interface TiGoogleanalyticsTracker : TiProxy
 
--(id)initWithTracker:(id<GAITracker>)t;
+@property (nonatomic, readonly, assign) id<GAITracker> tracker;
+
+- (id)initWithTracker:(id<GAITracker>)tracker;
+- (id)get:(id)key;
+- (void)set:(id)args;
+- (void)send:(id)args;
+- (id)name;
 
 @end
