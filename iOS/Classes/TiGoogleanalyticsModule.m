@@ -34,8 +34,8 @@ MAKE_SYSTEM_PROP(LOG_VERBOSE, 4); //kGAILogLevelVerbose
 {
 	[super startup];
     
-    [GAI sharedInstance].trackUncaughtExceptions = YES;
-    [[[GAI sharedInstance] logger] setLogLevel:kGAILogLevelNone];
+    [self setTrackUncaughtExceptions:NUMBOOL(YES)];
+    [self setLogLevel:kGAILogLevelNone];
 }
 
 - (void)shutdown:(id)sender
@@ -90,33 +90,35 @@ MAKE_SYSTEM_PROP(LOG_VERBOSE, 4); //kGAILogLevelVerbose
     return [self proxify:retVal];
 }
 
--(id)optOut
+- (void)dispatch:(id)unused
 {
-    return NUMBOOL([GAI sharedInstance].optOut);
+    [[GAI sharedInstance] dispatch];
+}
+
+#pragma mark Custom Accessors
+
+- (id)optOut
+{
+    return NUMBOOL([[GAI sharedInstance] optOut]);
 }
 
 - (void)setOptOut:(id)value
 {
     ENSURE_SINGLE_ARG(value, NSObject);
     
-    [GAI sharedInstance].optOut = [TiUtils boolValue:value];
+    [[GAI sharedInstance] setOptOut:[TiUtils boolValue:value]];
 }
 
 - (id)dryRun
 {
-    return NUMBOOL([GAI sharedInstance].dryRun);
+    return NUMBOOL([[GAI sharedInstance] dryRun]);
 }
 
-- (void)setDryRun:(id)value
+- (void)setDryRun:(id)dryRun
 {
-    ENSURE_SINGLE_ARG(value, NSObject);
+    ENSURE_SINGLE_ARG(dryRun, NSObject);
     
-    [GAI sharedInstance].dryRun = [TiUtils boolValue:value];
-}
-
-- (void)dispatch:(id)unused
-{
-    [[GAI sharedInstance] dispatch];
+    [[GAI sharedInstance] setDryRun:[TiUtils boolValue:dryRun]];
 }
 
 - (id)mapBuilder
@@ -134,23 +136,32 @@ MAKE_SYSTEM_PROP(LOG_VERBOSE, 4); //kGAILogLevelVerbose
     return [TiGoogleanalyticsFields fields];
 }
 
-- (id)getFields:(id)args
+- (id)getFields:(id)unused
 {
     return [self fields];
 }
 
-- (void)setLogLevel:(id)value
+#pragma mark Setter Overrides
+
+- (void)setLogLevel:(NSNumber *)logLevel
 {
-    ENSURE_SINGLE_ARG(value, NSObject);
+    _logLevel = logLevel;
     
-    [[GAI sharedInstance].logger setLogLevel:[TiUtils intValue:value]];
+    [[[GAI sharedInstance] logger] setLogLevel:[logLevel integerValue]];
 }
 
-- (void)setDispatchInterval:(id)dispatchInterval
+- (void)setDispatchInterval:(NSNumber *)dispatchInterval
 {
-    ENSURE_SINGLE_ARG(dispatchInterval, NSNumber);
+    _dispatchInterval = dispatchInterval;
     
     [[GAI sharedInstance] setDispatchInterval:[dispatchInterval integerValue]];
+}
+
+- (void)setTrackUncaughtExceptions:(NSNumber *)trackUncaughtExceptions
+{
+    _trackUncaughtExceptions = trackUncaughtExceptions;
+    
+    [[GAI sharedInstance] setTrackUncaughtExceptions:[trackUncaughtExceptions boolValue]];
 }
 
 @end

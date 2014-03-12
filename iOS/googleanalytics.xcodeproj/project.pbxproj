@@ -314,7 +314,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(TITANIUM_BASE_SDK)",
 					"$(TITANIUM_BASE_SDK2)",
-					"$(SRCROOT)",
+					"$(SRCROOT)/**",
 				);
 				OTHER_CFLAGS = (
 					"-DDEBUG",

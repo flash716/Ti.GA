@@ -17,6 +17,10 @@
 
 @interface TiGoogleanalyticsModule : TiModule
 
+@property (nonatomic, readwrite, assign) NSNumber* trackUncaughtExceptions;
+@property (nonatomic, readwrite, assign) NSNumber* dispatchInterval;
+@property (nonatomic, readwrite, assign) NSNumber* logLevel;
+
 - (id)proxify:(id<GAITracker>)tracker;
 - (void)closeTracker:(id)trackingId;
 - (id)defaultTracker;
@@ -25,11 +29,12 @@
 - (void)setOptOut:(id)value;
 - (id)dryRun;
 - (void)setDryRun:(id)value;
-- (void)dispatch:(id)unused;
 - (id)mapBuilder;
 - (id)getMapBuilder:(id)args;
 - (id)fields;
 - (id)getFields:(id)args;
-- (void)setLogLevel:(id)value;
+- (void)setLogLevel:(NSNumber *)logLevel;
+- (void)setDispatchInterval:(NSNumber *)dispatchInterval;
+- (void)setTrackUncaughtExceptions:(NSNumber *)trackUncaughtExceptions;
 
 @end
