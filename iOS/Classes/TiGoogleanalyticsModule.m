@@ -146,4 +146,11 @@ MAKE_SYSTEM_PROP(LOG_VERBOSE, 4); //kGAILogLevelVerbose
     [[GAI sharedInstance].logger setLogLevel:[TiUtils intValue:value]];
 }
 
+- (void)setDispatchInterval:(id)dispatchInterval
+{
+    ENSURE_SINGLE_ARG(dispatchInterval, NSNumber);
+    
+    [[GAI sharedInstance] setDispatchInterval:[dispatchInterval integerValue]];
+}
+
 @end
