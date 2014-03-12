@@ -1,6 +1,11 @@
-/**
- * This is a generated file. Do not edit or your changes will be lost
- */
+//
+//  TiGoogleanalyticsTracker.h
+//  googleanalytics
+//
+//  Created by Dawson Toth on 8/19/13.
+//
+//
+
 #import "TiGoogleanalyticsModuleAssets.h"
 
 extern NSData* filterDataInRange(NSData* thedata, NSRange range);

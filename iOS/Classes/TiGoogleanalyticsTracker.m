@@ -10,49 +10,55 @@
 
 @implementation TiGoogleanalyticsTracker
 
--(id)initWithTracker:(id<GAITracker>)t
+- (void)dealloc
 {
-    if (self = [super init]) {
-        // DToth: GAI.h tells us not to retain/release the tracker, so we won't.
-        tracker = t;
+    _tracker = nil;
+    
+	[super dealloc];
+}
+
+- (id)initWithTracker:(id<GAITracker>)tracker
+{
+    if (self = [super init])
+    {
+        _tracker = tracker;
     }
+    
     return self;
 }
 
 #pragma mark Public API
 
--(id)get:(id)key
+- (id)get:(id)key
 {
     ENSURE_SINGLE_ARG(key, NSString);
-    return [tracker get:key];
+    
+    return [self.tracker get:key];
 }
 
--(id)name
+- (void)set:(id)args
 {
-    return tracker.name;
-}
-
--(void)send:(id)args
-{
-    ENSURE_SINGLE_ARG(args, NSDictionary);
-    [tracker send:args];
-}
-
--(void)set:(id)args
-{
-    NSString *key;
-    NSString *value;
-    ENSURE_ARG_COUNT(args, 2)
+    ENSURE_ARG_COUNT(args, 2);
+    
+    NSString *key = nil;
+    NSString *value = nil;
+    
     ENSURE_ARG_AT_INDEX(key, args, 0, NSString);
     ENSURE_ARG_AT_INDEX(value, args, 1, NSString);
-    [tracker set:key value:value];
+    
+    [self.tracker set:key value:value];
 }
 
--(void)dealloc
+- (void)send:(id)args
 {
-    // DToth: GAI.h tells us not to retain/release the tracker, so we won't.
-    tracker = nil;
-	[super dealloc];
+    ENSURE_SINGLE_ARG(args, NSDictionary);
+    
+    [self.tracker send:args];
+}
+
+- (id)name
+{
+    return [self.tracker name];
 }
 
 @end
