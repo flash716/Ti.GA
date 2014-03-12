@@ -113,7 +113,6 @@
 				08FB77AEFE84172EC02AAC07 /* Classes */,
 				32C88DFF0371C24200C91783 /* Other Sources */,
 				0867D69AFE84028FC02AAC07 /* Frameworks */,
-				EDC3309218D0BB7E00E2B31A /* libz.dylib */,
 				034768DFFF38A50411DB9C8B /* Products */,
 			);
 			name = googleanalytics;
@@ -122,9 +121,10 @@
 		0867D69AFE84028FC02AAC07 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				EDC3309418D0BB9000E2B31A /* AdSupport.framework */,
-				A09F098F17C30C7C00A6EC03 /* SystemConfiguration.framework */,
 				A09F098D17C30C7700A6EC03 /* CoreData.framework */,
+				A09F098F17C30C7C00A6EC03 /* SystemConfiguration.framework */,
+				EDC3309418D0BB9000E2B31A /* AdSupport.framework */,
+				EDC3309218D0BB7E00E2B31A /* libz.dylib */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
