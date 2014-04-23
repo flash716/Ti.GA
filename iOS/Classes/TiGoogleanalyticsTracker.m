@@ -7,6 +7,7 @@
 //
 
 #import "TiGoogleanalyticsTracker.h"
+#import "GAIFields.h"
 
 @implementation TiGoogleanalyticsTracker
 
@@ -47,6 +48,18 @@
     ENSURE_ARG_AT_INDEX(value, args, 1, NSString);
     
     [self.tracker set:key value:value];
+}
+
+- (void)setCustom:(id)args
+{
+    NSNumber *paramIndex = nil;
+    NSString *paramValue = nil;
+    
+    ENSURE_ARG_AT_INDEX(paramIndex, args, 0, NSNumber);
+    ENSURE_ARG_AT_INDEX(paramValue, args, 1, NSString);
+    
+    [self.tracker set:[GAIFields customDimensionForIndex:paramIndex] value:paramValue];
+
 }
 
 - (void)send:(id)args

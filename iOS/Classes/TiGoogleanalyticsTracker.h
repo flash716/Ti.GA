@@ -16,6 +16,7 @@
 - (id)initWithTracker:(id<GAITracker>)tracker;
 - (id)get:(id)key;
 - (void)set:(id)args;
+- (void)setCustom:(id)args;
 - (void)send:(id)args;
 - (id)name;
 

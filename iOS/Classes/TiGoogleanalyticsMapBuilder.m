@@ -7,6 +7,7 @@
 //
 
 #import "TiGoogleanalyticsMapBuilder.h"
+#import "GAIFields.h"
 
 @implementation TiGoogleanalyticsMapBuilder
 
@@ -170,6 +171,19 @@
     ENSURE_ARG_AT_INDEX(paramValue, args, 1, NSString);
     
     [self.db set:paramValue forKey:paramName];
+    
+    return self;
+}
+
+- (id)setCustom:(id)args
+{
+    NSNumber *paramIndex = nil;
+    NSString *paramValue = nil;
+    
+    ENSURE_ARG_AT_INDEX(paramIndex, args, 0, NSNumber);
+    ENSURE_ARG_AT_INDEX(paramValue, args, 1, NSString);
+    
+    [self.db set:paramValue forKey:[GAIFields customDimensionForIndex:paramIndex]];
     
     return self;
 }

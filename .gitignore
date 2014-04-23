@@ -5,3 +5,4 @@ ios/build
 *.zip
 *.xcuserdatad
 *.xccheckout
+.project

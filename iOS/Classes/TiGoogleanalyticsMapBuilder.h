@@ -23,6 +23,7 @@
 - (id)build:(id)args;
 - (id)get:(id)paramName;
 - (id)set:(id)args;
+- (id)setCustom:(id)args;
 - (id)setAll:(id)args;
 - (id)setCampaignParamsFromUrl:(id)utmParams;
 
